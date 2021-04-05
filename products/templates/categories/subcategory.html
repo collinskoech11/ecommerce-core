@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %} {% block content %}
+
+    {% if subcategory %}
+        {{ subcategory|json_script:"subcategoryData" }}
+        {#        const value = JSON.parse(document.getElementById('subcategoryData').textContent);              #}
+
+        <div id="subcategory-page">
+            <main class="large-spinner">
+                <span uk-spinner="ratio: 5" class="my-spinner"></span>
+            </main>
+        </div>
+    {% else %}
+        <p>no subcategories available</p>
+    {% endif %}
+{% endblock %}
+
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'js/bundles/subCategory.js' %}"></script>
+{% endblock scripts %}

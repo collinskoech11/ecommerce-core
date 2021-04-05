@@ -1,7 +1,8 @@
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 # Application definition
 INSTALLED_APPS = [
@@ -18,7 +19,12 @@ INSTALLED_APPS = [
     # local apps
     'accounts',
     'orders',
-    'products'
+    'products',
+    'payments',
+    'sms',
+    'frontend',
+    # always last
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +53,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'frontend.context_processors.general',
+                'products.context_processors.trending_brands_processor',
+                'products.context_processors.header_categories_processor',
             ],
         },
     },
@@ -82,3 +91,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+
+# Media
+MEDIA_URL = '/media/'

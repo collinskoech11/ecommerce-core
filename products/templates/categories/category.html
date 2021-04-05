@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %} {% block content %}
+
+    {% if category %}
+        {{ category|json_script:"categoryData" }}
+        {#        const value = JSON.parse(document.getElementById('categoryData').textContent);              #}
+
+        <div id="category-page">
+            <main class="large-spinner">
+                <span uk-spinner="ratio: 5" class="my-spinner"></span>
+            </main>
+        </div>
+    {% else %}
+        <p>no categories available</p>
+    {% endif %}
+{% endblock %}
+
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'js/bundles/category.js' %}"></script>
+{% endblock scripts %}

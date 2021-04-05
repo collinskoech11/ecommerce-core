@@ -1,5 +1,7 @@
-from backend.settings.base import *
 from environs import Env
+from google.oauth2 import service_account
+
+from backend.settings.base import *
 
 env = Env()
 
@@ -17,6 +19,8 @@ DATABASES = {
         'PASSWORD': env("DB_PASSWORD"),
         'HOST': env("DB_HOST"),
         'PORT': env("DB_PORT"),
+        'CONN_MAX_AGE ': 10,
+        'ATOMIC_REQUESTS': env.bool('ATOMIC_REQUESTS', True),
     }
 }
 
@@ -31,8 +35,61 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions'
-    ]
+            ]
 }
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
+# Africa's talking
+AFRICASTALKING_USERNAME = env('AFRICASTALKING_USERNAME')
+AFRICASTALKING_API_KEY = env('AFRICASTALKING_API_KEY')
+AFRICASTALKING_PAYMENT_PROD_NAME = env('AFRICASTALKING_PAYMENT_PROD_NAME')
+AFRICASTALKING_CURRENCY = env('AFRICASTALKING_CURRENCY')
+
+if DEBUG:
+    INTERNAL_IPS = ('127.0.0.1',)
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
+
+    INSTALLED_APPS += [
+        'debug_toolbar',
+    ]
+
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+    ]
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': False,
+    }
+
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+# Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+GS_LOCATION = env("GS_LOCATION")
+GS_DEFAULT_ACL = env("GS_DEFAULT_ACL")
+GS_FILE_OVERWRITE = False
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    BASE_DIR + "/backend/settings/cred.json")
+
+PROD = env.bool("PROD")

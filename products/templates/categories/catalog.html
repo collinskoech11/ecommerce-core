@@ -1,0 +1,90 @@
+{% extends "base_generic.html" %} {% block content %}
+    <main>
+        <section class="uk-section uk-section-small">
+            <div class="uk-container">
+                <div class="uk-grid-medium uk-child-width-1-1" uk-grid>
+                    <div class="uk-text-center">
+                        <ul class="uk-breadcrumb uk-flex-center uk-margin-remove">
+                            <li><a href="/">Home</a></li>
+                            <li><span>Catalog</span></li>
+                        </ul>
+                        <h1 class="uk-margin-small-top uk-margin-remove-bottom">Catalog</h1>
+                    </div>
+                    <div>
+                        <div class="uk-grid-medium" uk-grid>
+                            {#          <----------------------------- Aside ----------------------->   #}
+                            <aside class="uk-width-1-4 uk-visible@m tm-aside-column">
+                                <nav
+                                        class="uk-card uk-card-default uk-card-body uk-card-small"
+                                        uk-sticky="bottom: true; offset: 90"
+                                >
+                                    <ul
+                                            class="uk-nav uk-nav-default uk-text-capitalize uk-text-capitalize"
+                                            uk-scrollspy-nav="closest: li; scroll: true; offset: 90"
+                                    >
+
+                                        {% for category in categories %}
+
+                                            <li><a href="/categories/{{ category.slug }}">{{ category.title }}</a></li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </nav>
+                            </aside>
+                            {#          <----------------------------- End Aside ----------------------->   #}
+                            {#          <----------------------------- Category Cards ----------------------->   #}
+                            <div class="uk-width-1-1 uk-width-expand@m">
+                                <div class="uk-grid-medium uk-child-width-1-1" uk-grid>
+                                    {% for category in categories %}
+                                        <section id="{{ category.slug }}">
+                                            <div
+                                                    class="uk-card uk-card-default uk-card-small tm-ignore-container"
+                                            >
+                                                <header class="uk-card-header">
+                                                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                                        <a href="/categories/{{ category.slug }}"
+                                                        ><img
+                                                                src="{{ category.image }}"
+                                                                alt="{{ category.title }} from {{ website_name }}"
+                                                                width="50"
+                                                                height="50"
+                                                        /></a>
+                                                        <div class="uk-width-expand">
+                                                            <h2 class="uk-h4 uk-margin-remove uk-text-capitalize">
+                                                                <a
+                                                                        class="uk-link-heading"
+                                                                        href="/categories/{{ category.slug }}"
+                                                                >{{ category.title }}</a
+                                                                >
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </header>
+                                                {#          <------------------ SubCategories --------->   #}
+                                                <div class="uk-card-body uk-text-capitalize">
+                                                    <ul class="uk-list">
+                                                        {% for sub_cat in category.sub_categories %}
+                                                            <li>
+                                                                <a href="/categories/subcategory/{{ sub_cat.slug }}">
+                                                                    {{ sub_cat.title }}
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                {#          <------------------ End SubCategories --------->   #}
+                                            </div>
+                                        </section>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {#          <----------------------------- End Category Cards ----------------------->   #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock %}
